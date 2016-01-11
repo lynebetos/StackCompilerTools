@@ -1,0 +1,11 @@
+package SK;
+message CoordInfo
+{
+	required int64 iCount = 1;
+	message Coord
+	{
+		required double Lat = 1;
+		required double Lon = 2;
+	}
+	repeated Coord Coords = 2;
+}

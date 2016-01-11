@@ -1,0 +1,18 @@
+package SK;
+message Index
+{
+	required int32 iCount = 1;
+	message mapIndex
+	{
+		required string code = 1;  //线路编号
+		required int32 dir = 2;		//线路方向
+		message wayIndex
+		{
+			required int32 stakeNum = 1; //里程桩号
+			required int32 CIndex = 2;	//经纬度索引
+			required int32 LIndex = 3;	//link索引
+		}
+		repeated wayIndex wayIndexs = 3;
+	}
+	repeated mapIndex mapIndexs = 2;
+}

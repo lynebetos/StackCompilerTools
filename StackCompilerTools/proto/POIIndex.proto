@@ -1,0 +1,28 @@
+package SK;
+message POIIndex
+{
+	required int32 iCount = 1;
+	message mapPOI		//按POI的类型分组
+	{
+		required string code = 1;
+		required int32 dir = 2;
+		message stakePOI
+		{
+			required int32 stakenum = 1;
+			message typePOI
+			{
+				required int32 type = 1;
+				message POI
+				{
+					required string name = 1;
+					required double Lat = 2;	//POI经度
+					required double Lon = 3;	//POI维度
+				}
+				required POI pois = 2;
+			}
+			required typePOI types = 2;
+		}
+		repeated stakePOI stakepois = 3;
+	}
+	repeated mapPOI roads = 2;
+}
