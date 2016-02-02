@@ -18,9 +18,9 @@ message POIIndex
 					required double Lat = 2;	//POI¾­¶È
 					required double Lon = 3;	//POIÎ¬¶È
 				}
-				required POI pois = 2;
+				repeated POI pois = 2;
 			}
-			required typePOI types = 2;
+			repeated typePOI typepois = 2;
 		}
 		repeated stakePOI stakepois = 3;
 	}

@@ -207,27 +207,28 @@ class POIIndex_mapPOI_stakePOI_typePOI : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 type() const;
   inline void set_type(::google::protobuf::int32 value);
 
-  // required .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
-  inline bool has_pois() const;
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
+  inline int pois_size() const;
   inline void clear_pois();
   static const int kPoisFieldNumber = 2;
-  inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI& pois() const;
-  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* mutable_pois();
-  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* release_pois();
-  inline void set_allocated_pois(::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* pois);
+  inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI& pois(int index) const;
+  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* mutable_pois(int index);
+  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* add_pois();
+  inline const ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI >&
+      pois() const;
+  inline ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI >*
+      mutable_pois();
 
   // @@protoc_insertion_point(class_scope:SK.POIIndex.mapPOI.stakePOI.typePOI)
  private:
   inline void set_has_type();
   inline void clear_has_type();
-  inline void set_has_pois();
-  inline void clear_has_pois();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* pois_;
+  ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI > pois_;
   ::google::protobuf::int32 type_;
   friend void  protobuf_AddDesc_POIIndex_2eproto();
   friend void protobuf_AssignDesc_POIIndex_2eproto();
@@ -300,27 +301,28 @@ class POIIndex_mapPOI_stakePOI : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 stakenum() const;
   inline void set_stakenum(::google::protobuf::int32 value);
 
-  // required .SK.POIIndex.mapPOI.stakePOI.typePOI types = 2;
-  inline bool has_types() const;
-  inline void clear_types();
-  static const int kTypesFieldNumber = 2;
-  inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI& types() const;
-  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* mutable_types();
-  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* release_types();
-  inline void set_allocated_types(::SK::POIIndex_mapPOI_stakePOI_typePOI* types);
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI typepois = 2;
+  inline int typepois_size() const;
+  inline void clear_typepois();
+  static const int kTypepoisFieldNumber = 2;
+  inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI& typepois(int index) const;
+  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* mutable_typepois(int index);
+  inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* add_typepois();
+  inline const ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI >&
+      typepois() const;
+  inline ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI >*
+      mutable_typepois();
 
   // @@protoc_insertion_point(class_scope:SK.POIIndex.mapPOI.stakePOI)
  private:
   inline void set_has_stakenum();
   inline void clear_has_stakenum();
-  inline void set_has_types();
-  inline void clear_has_types();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::SK::POIIndex_mapPOI_stakePOI_typePOI* types_;
+  ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI > typepois_;
   ::google::protobuf::int32 stakenum_;
   friend void  protobuf_AddDesc_POIIndex_2eproto();
   friend void protobuf_AssignDesc_POIIndex_2eproto();
@@ -691,45 +693,34 @@ inline void POIIndex_mapPOI_stakePOI_typePOI::set_type(::google::protobuf::int32
   // @@protoc_insertion_point(field_set:SK.POIIndex.mapPOI.stakePOI.typePOI.type)
 }
 
-// required .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
-inline bool POIIndex_mapPOI_stakePOI_typePOI::has_pois() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void POIIndex_mapPOI_stakePOI_typePOI::set_has_pois() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void POIIndex_mapPOI_stakePOI_typePOI::clear_has_pois() {
-  _has_bits_[0] &= ~0x00000002u;
+// repeated .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
+inline int POIIndex_mapPOI_stakePOI_typePOI::pois_size() const {
+  return pois_.size();
 }
 inline void POIIndex_mapPOI_stakePOI_typePOI::clear_pois() {
-  if (pois_ != NULL) pois_->::SK::POIIndex_mapPOI_stakePOI_typePOI_POI::Clear();
-  clear_has_pois();
+  pois_.Clear();
 }
-inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI& POIIndex_mapPOI_stakePOI_typePOI::pois() const {
+inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI& POIIndex_mapPOI_stakePOI_typePOI::pois(int index) const {
   // @@protoc_insertion_point(field_get:SK.POIIndex.mapPOI.stakePOI.typePOI.pois)
-  return pois_ != NULL ? *pois_ : *default_instance_->pois_;
+  return pois_.Get(index);
 }
-inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* POIIndex_mapPOI_stakePOI_typePOI::mutable_pois() {
-  set_has_pois();
-  if (pois_ == NULL) pois_ = new ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI;
+inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* POIIndex_mapPOI_stakePOI_typePOI::mutable_pois(int index) {
   // @@protoc_insertion_point(field_mutable:SK.POIIndex.mapPOI.stakePOI.typePOI.pois)
+  return pois_.Mutable(index);
+}
+inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* POIIndex_mapPOI_stakePOI_typePOI::add_pois() {
+  // @@protoc_insertion_point(field_add:SK.POIIndex.mapPOI.stakePOI.typePOI.pois)
+  return pois_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI >&
+POIIndex_mapPOI_stakePOI_typePOI::pois() const {
+  // @@protoc_insertion_point(field_list:SK.POIIndex.mapPOI.stakePOI.typePOI.pois)
   return pois_;
 }
-inline ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* POIIndex_mapPOI_stakePOI_typePOI::release_pois() {
-  clear_has_pois();
-  ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* temp = pois_;
-  pois_ = NULL;
-  return temp;
-}
-inline void POIIndex_mapPOI_stakePOI_typePOI::set_allocated_pois(::SK::POIIndex_mapPOI_stakePOI_typePOI_POI* pois) {
-  delete pois_;
-  pois_ = pois;
-  if (pois) {
-    set_has_pois();
-  } else {
-    clear_has_pois();
-  }
-  // @@protoc_insertion_point(field_set_allocated:SK.POIIndex.mapPOI.stakePOI.typePOI.pois)
+inline ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI >*
+POIIndex_mapPOI_stakePOI_typePOI::mutable_pois() {
+  // @@protoc_insertion_point(field_mutable_list:SK.POIIndex.mapPOI.stakePOI.typePOI.pois)
+  return &pois_;
 }
 
 // -------------------------------------------------------------------
@@ -760,45 +751,34 @@ inline void POIIndex_mapPOI_stakePOI::set_stakenum(::google::protobuf::int32 val
   // @@protoc_insertion_point(field_set:SK.POIIndex.mapPOI.stakePOI.stakenum)
 }
 
-// required .SK.POIIndex.mapPOI.stakePOI.typePOI types = 2;
-inline bool POIIndex_mapPOI_stakePOI::has_types() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+// repeated .SK.POIIndex.mapPOI.stakePOI.typePOI typepois = 2;
+inline int POIIndex_mapPOI_stakePOI::typepois_size() const {
+  return typepois_.size();
 }
-inline void POIIndex_mapPOI_stakePOI::set_has_types() {
-  _has_bits_[0] |= 0x00000002u;
+inline void POIIndex_mapPOI_stakePOI::clear_typepois() {
+  typepois_.Clear();
 }
-inline void POIIndex_mapPOI_stakePOI::clear_has_types() {
-  _has_bits_[0] &= ~0x00000002u;
+inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI& POIIndex_mapPOI_stakePOI::typepois(int index) const {
+  // @@protoc_insertion_point(field_get:SK.POIIndex.mapPOI.stakePOI.typepois)
+  return typepois_.Get(index);
 }
-inline void POIIndex_mapPOI_stakePOI::clear_types() {
-  if (types_ != NULL) types_->::SK::POIIndex_mapPOI_stakePOI_typePOI::Clear();
-  clear_has_types();
+inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* POIIndex_mapPOI_stakePOI::mutable_typepois(int index) {
+  // @@protoc_insertion_point(field_mutable:SK.POIIndex.mapPOI.stakePOI.typepois)
+  return typepois_.Mutable(index);
 }
-inline const ::SK::POIIndex_mapPOI_stakePOI_typePOI& POIIndex_mapPOI_stakePOI::types() const {
-  // @@protoc_insertion_point(field_get:SK.POIIndex.mapPOI.stakePOI.types)
-  return types_ != NULL ? *types_ : *default_instance_->types_;
+inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* POIIndex_mapPOI_stakePOI::add_typepois() {
+  // @@protoc_insertion_point(field_add:SK.POIIndex.mapPOI.stakePOI.typepois)
+  return typepois_.Add();
 }
-inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* POIIndex_mapPOI_stakePOI::mutable_types() {
-  set_has_types();
-  if (types_ == NULL) types_ = new ::SK::POIIndex_mapPOI_stakePOI_typePOI;
-  // @@protoc_insertion_point(field_mutable:SK.POIIndex.mapPOI.stakePOI.types)
-  return types_;
+inline const ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI >&
+POIIndex_mapPOI_stakePOI::typepois() const {
+  // @@protoc_insertion_point(field_list:SK.POIIndex.mapPOI.stakePOI.typepois)
+  return typepois_;
 }
-inline ::SK::POIIndex_mapPOI_stakePOI_typePOI* POIIndex_mapPOI_stakePOI::release_types() {
-  clear_has_types();
-  ::SK::POIIndex_mapPOI_stakePOI_typePOI* temp = types_;
-  types_ = NULL;
-  return temp;
-}
-inline void POIIndex_mapPOI_stakePOI::set_allocated_types(::SK::POIIndex_mapPOI_stakePOI_typePOI* types) {
-  delete types_;
-  types_ = types;
-  if (types) {
-    set_has_types();
-  } else {
-    clear_has_types();
-  }
-  // @@protoc_insertion_point(field_set_allocated:SK.POIIndex.mapPOI.stakePOI.types)
+inline ::google::protobuf::RepeatedPtrField< ::SK::POIIndex_mapPOI_stakePOI_typePOI >*
+POIIndex_mapPOI_stakePOI::mutable_typepois() {
+  // @@protoc_insertion_point(field_mutable_list:SK.POIIndex.mapPOI.stakePOI.typepois)
+  return &typepois_;
 }
 
 // -------------------------------------------------------------------

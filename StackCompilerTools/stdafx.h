@@ -17,5 +17,4 @@
 
 #pragma comment(lib,"../lib/gdal_i.lib")
 
-
 // TODO:  在此处引用程序需要的其他头文件

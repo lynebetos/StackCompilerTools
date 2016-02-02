@@ -19,6 +19,12 @@
     <Filter Include="protofile">
       <UniqueIdentifier>{cf7b45f3-b57f-4fa8-bca5-de591c28b3d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RoadNet">
+      <UniqueIdentifier>{7cdb50c8-7c27-4c34-8f31-855cb7b8c8be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Supporter">
+      <UniqueIdentifier>{c5daa50c-9a1d-4dee-9c0a-703b5e9e8475}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -51,6 +57,24 @@
     <ClInclude Include="FacilityOfRoad.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ShpNetModuleBuilder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadNet\Link.h">
+      <Filter>RoadNet</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadNet\Node.h">
+      <Filter>RoadNet</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadNet\Vertex.h">
+      <Filter>RoadNet</Filter>
+    </ClInclude>
+    <ClInclude Include="Supporter\gissupporter.h">
+      <Filter>Supporter</Filter>
+    </ClInclude>
+    <ClInclude Include="Supporter\gzgpst.h">
+      <Filter>Supporter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -76,6 +100,21 @@
     </ClCompile>
     <ClCompile Include="FacilityOfRoad.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ShpNetModuleBuilder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadNet\Link.cpp">
+      <Filter>RoadNet</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadNet\Vertex.cpp">
+      <Filter>RoadNet</Filter>
+    </ClCompile>
+    <ClCompile Include="Supporter\gissupporter.cpp">
+      <Filter>Supporter</Filter>
+    </ClCompile>
+    <ClCompile Include="Supporter\gzgpst.cpp">
+      <Filter>Supporter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

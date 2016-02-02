@@ -81,7 +81,7 @@ void protobuf_AssignDesc_POIIndex_2eproto() {
   POIIndex_mapPOI_stakePOI_descriptor_ = POIIndex_mapPOI_descriptor_->nested_type(0);
   static const int POIIndex_mapPOI_stakePOI_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(POIIndex_mapPOI_stakePOI, stakenum_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(POIIndex_mapPOI_stakePOI, types_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(POIIndex_mapPOI_stakePOI, typepois_),
   };
   POIIndex_mapPOI_stakePOI_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -173,16 +173,16 @@ void protobuf_AddDesc_POIIndex_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016POIIndex.proto\022\002SK\"\351\002\n\010POIIndex\022\016\n\006iCo"
+    "\n\016POIIndex.proto\022\002SK\"\354\002\n\010POIIndex\022\016\n\006iCo"
     "unt\030\001 \002(\005\022\"\n\005roads\030\002 \003(\0132\023.SK.POIIndex.m"
-    "apPOI\032\250\002\n\006mapPOI\022\014\n\004code\030\001 \002(\t\022\013\n\003dir\030\002 "
+    "apPOI\032\253\002\n\006mapPOI\022\014\n\004code\030\001 \002(\t\022\013\n\003dir\030\002 "
     "\002(\005\022/\n\tstakepois\030\003 \003(\0132\034.SK.POIIndex.map"
-    "POI.stakePOI\032\321\001\n\010stakePOI\022\020\n\010stakenum\030\001 "
-    "\002(\005\0223\n\005types\030\002 \002(\0132$.SK.POIIndex.mapPOI."
-    "stakePOI.typePOI\032~\n\007typePOI\022\014\n\004type\030\001 \002("
-    "\005\0226\n\004pois\030\002 \002(\0132(.SK.POIIndex.mapPOI.sta"
-    "kePOI.typePOI.POI\032-\n\003POI\022\014\n\004name\030\001 \002(\t\022\013"
-    "\n\003Lat\030\002 \002(\001\022\013\n\003Lon\030\003 \002(\001", 384);
+    "POI.stakePOI\032\324\001\n\010stakePOI\022\020\n\010stakenum\030\001 "
+    "\002(\005\0226\n\010typepois\030\002 \003(\0132$.SK.POIIndex.mapP"
+    "OI.stakePOI.typePOI\032~\n\007typePOI\022\014\n\004type\030\001"
+    " \002(\005\0226\n\004pois\030\002 \003(\0132(.SK.POIIndex.mapPOI."
+    "stakePOI.typePOI.POI\032-\n\003POI\022\014\n\004name\030\001 \002("
+    "\t\022\013\n\003Lat\030\002 \002(\001\022\013\n\003Lon\030\003 \002(\001", 387);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "POIIndex.proto", &protobuf_RegisterTypes);
   POIIndex::default_instance_ = new POIIndex();
@@ -552,7 +552,6 @@ POIIndex_mapPOI_stakePOI_typePOI::POIIndex_mapPOI_stakePOI_typePOI()
 }
 
 void POIIndex_mapPOI_stakePOI_typePOI::InitAsDefaultInstance() {
-  pois_ = const_cast< ::SK::POIIndex_mapPOI_stakePOI_typePOI_POI*>(&::SK::POIIndex_mapPOI_stakePOI_typePOI_POI::default_instance());
 }
 
 POIIndex_mapPOI_stakePOI_typePOI::POIIndex_mapPOI_stakePOI_typePOI(const POIIndex_mapPOI_stakePOI_typePOI& from)
@@ -565,7 +564,6 @@ POIIndex_mapPOI_stakePOI_typePOI::POIIndex_mapPOI_stakePOI_typePOI(const POIInde
 void POIIndex_mapPOI_stakePOI_typePOI::SharedCtor() {
   _cached_size_ = 0;
   type_ = 0;
-  pois_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -576,7 +574,6 @@ POIIndex_mapPOI_stakePOI_typePOI::~POIIndex_mapPOI_stakePOI_typePOI() {
 
 void POIIndex_mapPOI_stakePOI_typePOI::SharedDtor() {
   if (this != default_instance_) {
-    delete pois_;
   }
 }
 
@@ -602,12 +599,8 @@ POIIndex_mapPOI_stakePOI_typePOI* POIIndex_mapPOI_stakePOI_typePOI::New() const 
 }
 
 void POIIndex_mapPOI_stakePOI_typePOI::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    type_ = 0;
-    if (has_pois()) {
-      if (pois_ != NULL) pois_->::SK::POIIndex_mapPOI_stakePOI_typePOI_POI::Clear();
-    }
-  }
+  type_ = 0;
+  pois_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -636,15 +629,16 @@ bool POIIndex_mapPOI_stakePOI_typePOI::MergePartialFromCodedStream(
         break;
       }
 
-      // required .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
+      // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
       case 2: {
         if (tag == 18) {
          parse_pois:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_pois()));
+                input, add_pois()));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(18)) goto parse_pois;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -679,10 +673,10 @@ void POIIndex_mapPOI_stakePOI_typePOI::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->type(), output);
   }
 
-  // required .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
-  if (has_pois()) {
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
+  for (int i = 0; i < this->pois_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->pois(), output);
+      2, this->pois(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -700,11 +694,11 @@ void POIIndex_mapPOI_stakePOI_typePOI::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->type(), target);
   }
 
-  // required .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
-  if (has_pois()) {
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
+  for (int i = 0; i < this->pois_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->pois(), target);
+        2, this->pois(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -726,14 +720,15 @@ int POIIndex_mapPOI_stakePOI_typePOI::ByteSize() const {
           this->type());
     }
 
-    // required .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
-    if (has_pois()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->pois());
-    }
-
   }
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI.POI pois = 2;
+  total_size += 1 * this->pois_size();
+  for (int i = 0; i < this->pois_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->pois(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -759,12 +754,10 @@ void POIIndex_mapPOI_stakePOI_typePOI::MergeFrom(const ::google::protobuf::Messa
 
 void POIIndex_mapPOI_stakePOI_typePOI::MergeFrom(const POIIndex_mapPOI_stakePOI_typePOI& from) {
   GOOGLE_CHECK_NE(&from, this);
+  pois_.MergeFrom(from.pois_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_type()) {
       set_type(from.type());
-    }
-    if (from.has_pois()) {
-      mutable_pois()->::SK::POIIndex_mapPOI_stakePOI_typePOI_POI::MergeFrom(from.pois());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -783,18 +776,16 @@ void POIIndex_mapPOI_stakePOI_typePOI::CopyFrom(const POIIndex_mapPOI_stakePOI_t
 }
 
 bool POIIndex_mapPOI_stakePOI_typePOI::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_pois()) {
-    if (!this->pois().IsInitialized()) return false;
-  }
+  if (!::google::protobuf::internal::AllAreInitialized(this->pois())) return false;
   return true;
 }
 
 void POIIndex_mapPOI_stakePOI_typePOI::Swap(POIIndex_mapPOI_stakePOI_typePOI* other) {
   if (other != this) {
     std::swap(type_, other->type_);
-    std::swap(pois_, other->pois_);
+    pois_.Swap(&other->pois_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -814,7 +805,7 @@ void POIIndex_mapPOI_stakePOI_typePOI::Swap(POIIndex_mapPOI_stakePOI_typePOI* ot
 
 #ifndef _MSC_VER
 const int POIIndex_mapPOI_stakePOI::kStakenumFieldNumber;
-const int POIIndex_mapPOI_stakePOI::kTypesFieldNumber;
+const int POIIndex_mapPOI_stakePOI::kTypepoisFieldNumber;
 #endif  // !_MSC_VER
 
 POIIndex_mapPOI_stakePOI::POIIndex_mapPOI_stakePOI()
@@ -824,7 +815,6 @@ POIIndex_mapPOI_stakePOI::POIIndex_mapPOI_stakePOI()
 }
 
 void POIIndex_mapPOI_stakePOI::InitAsDefaultInstance() {
-  types_ = const_cast< ::SK::POIIndex_mapPOI_stakePOI_typePOI*>(&::SK::POIIndex_mapPOI_stakePOI_typePOI::default_instance());
 }
 
 POIIndex_mapPOI_stakePOI::POIIndex_mapPOI_stakePOI(const POIIndex_mapPOI_stakePOI& from)
@@ -837,7 +827,6 @@ POIIndex_mapPOI_stakePOI::POIIndex_mapPOI_stakePOI(const POIIndex_mapPOI_stakePO
 void POIIndex_mapPOI_stakePOI::SharedCtor() {
   _cached_size_ = 0;
   stakenum_ = 0;
-  types_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -848,7 +837,6 @@ POIIndex_mapPOI_stakePOI::~POIIndex_mapPOI_stakePOI() {
 
 void POIIndex_mapPOI_stakePOI::SharedDtor() {
   if (this != default_instance_) {
-    delete types_;
   }
 }
 
@@ -874,12 +862,8 @@ POIIndex_mapPOI_stakePOI* POIIndex_mapPOI_stakePOI::New() const {
 }
 
 void POIIndex_mapPOI_stakePOI::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    stakenum_ = 0;
-    if (has_types()) {
-      if (types_ != NULL) types_->::SK::POIIndex_mapPOI_stakePOI_typePOI::Clear();
-    }
-  }
+  stakenum_ = 0;
+  typepois_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -904,19 +888,20 @@ bool POIIndex_mapPOI_stakePOI::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_types;
+        if (input->ExpectTag(18)) goto parse_typepois;
         break;
       }
 
-      // required .SK.POIIndex.mapPOI.stakePOI.typePOI types = 2;
+      // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI typepois = 2;
       case 2: {
         if (tag == 18) {
-         parse_types:
+         parse_typepois:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_types()));
+                input, add_typepois()));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(18)) goto parse_typepois;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -951,10 +936,10 @@ void POIIndex_mapPOI_stakePOI::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->stakenum(), output);
   }
 
-  // required .SK.POIIndex.mapPOI.stakePOI.typePOI types = 2;
-  if (has_types()) {
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI typepois = 2;
+  for (int i = 0; i < this->typepois_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->types(), output);
+      2, this->typepois(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -972,11 +957,11 @@ void POIIndex_mapPOI_stakePOI::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->stakenum(), target);
   }
 
-  // required .SK.POIIndex.mapPOI.stakePOI.typePOI types = 2;
-  if (has_types()) {
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI typepois = 2;
+  for (int i = 0; i < this->typepois_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->types(), target);
+        2, this->typepois(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -998,14 +983,15 @@ int POIIndex_mapPOI_stakePOI::ByteSize() const {
           this->stakenum());
     }
 
-    // required .SK.POIIndex.mapPOI.stakePOI.typePOI types = 2;
-    if (has_types()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->types());
-    }
-
   }
+  // repeated .SK.POIIndex.mapPOI.stakePOI.typePOI typepois = 2;
+  total_size += 1 * this->typepois_size();
+  for (int i = 0; i < this->typepois_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->typepois(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -1031,12 +1017,10 @@ void POIIndex_mapPOI_stakePOI::MergeFrom(const ::google::protobuf::Message& from
 
 void POIIndex_mapPOI_stakePOI::MergeFrom(const POIIndex_mapPOI_stakePOI& from) {
   GOOGLE_CHECK_NE(&from, this);
+  typepois_.MergeFrom(from.typepois_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_stakenum()) {
       set_stakenum(from.stakenum());
-    }
-    if (from.has_types()) {
-      mutable_types()->::SK::POIIndex_mapPOI_stakePOI_typePOI::MergeFrom(from.types());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1055,18 +1039,16 @@ void POIIndex_mapPOI_stakePOI::CopyFrom(const POIIndex_mapPOI_stakePOI& from) {
 }
 
 bool POIIndex_mapPOI_stakePOI::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_types()) {
-    if (!this->types().IsInitialized()) return false;
-  }
+  if (!::google::protobuf::internal::AllAreInitialized(this->typepois())) return false;
   return true;
 }
 
 void POIIndex_mapPOI_stakePOI::Swap(POIIndex_mapPOI_stakePOI* other) {
   if (other != this) {
     std::swap(stakenum_, other->stakenum_);
-    std::swap(types_, other->types_);
+    typepois_.Swap(&other->typepois_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

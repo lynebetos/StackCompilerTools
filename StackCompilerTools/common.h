@@ -18,6 +18,8 @@ const double EARTH_RADIUS	= 6378.137;   // µØÇò³àµÀ°ë¾¶
 #define DIR_UP 1
 #define DIR_DOWN 2
 
+#define ONLY_STAKE_DATA
+
 typedef struct tagSakeIndex
 {
 	std::string strRoadCode;
@@ -213,6 +215,19 @@ typedef struct tagFacilityOfRoad
 	DCoord coord;
 	int iType;
 
+	void assign(tagFacilityOfRoad& r)
+	{
+		strRoadID = r.strRoadID;
+		iDir = r.iDir;
+		iPoiID = r.iPoiID;
+		lLinkID = r.lLinkID;
+		dbStakeInLine = r.dbStakeInLine;
+		strName = r.strName;
+		iType = r.iType;
+		coord.Lat = r.coord.Lat;
+		coord.Lon = r.coord.Lon;
+	}
+
 	void Init()
 	{
 		strRoadID = "";
@@ -249,6 +264,12 @@ typedef struct tagStakeInfo
 	int stakeFlag;
 	int Pre_Cindex;
 	int Nex_Cindex;
+
+#ifdef ONLY_STAKE_DATA
+	std::string strRouteName;
+	int iDir;
+#endif // ONLY_STAKE_DATA
+
 	//map<unsigned int, vector<p>>
 }StakeInfo;
 inline bool Equal(const DCoord& d1,const DCoord& d2)

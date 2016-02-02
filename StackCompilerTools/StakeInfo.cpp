@@ -37,10 +37,17 @@ bool CStakeInfo::Load()
 		try
 		{
 			stStakeInfo.routeID = poFeature->GetFieldAsString("RD_NAME");
-			stStakeInfo.stakeID = (int)poFeature->GetFieldAsDouble("LCZ");
 			stStakeInfo.lLinkID = poFeature->GetFieldAsInteger("LINKID");
-			stStakeInfo.dcoord.Lat = poFeature->GetFieldAsDouble("XSJD");
-			stStakeInfo.dcoord.Lon = poFeature->GetFieldAsDouble("XSWD");
+			stStakeInfo.dcoord.Lat = poFeature->GetFieldAsDouble("XSWD");
+			stStakeInfo.dcoord.Lon = poFeature->GetFieldAsDouble("XSJD");
+#ifdef ONLY_STAKE_DATA
+			stStakeInfo.strRouteName = poFeature->GetFieldAsString("LXMC");
+			stStakeInfo.iDir = poFeature->GetFieldAsInteger("SXX");
+			stStakeInfo.stakeID = atoi(poFeature->GetFieldAsString("LCZ"));
+#else
+			stStakeInfo.stakeID = (int)poFeature->GetFieldAsDouble("LCZ");
+#endif // 
+
 
 			auto itWay = m_mapStakeInfo.find(stStakeInfo.routeID);
 			if (itWay != m_mapStakeInfo.end())
@@ -50,7 +57,17 @@ bool CStakeInfo::Load()
 				if (itLink != mapStakeLink.end())
 				{
 					std::vector<StakeInfo>& vecStakeInfo = itLink->second;
+					for (int ii = 0;ii < vecStakeInfo.size(); ii++)
+					{
+						if (vecStakeInfo[ii].stakeID == stStakeInfo.stakeID)
+						{
+							auto itStake = vecStakeInfo.begin();
+							itStake += ii;
+							vecStakeInfo.erase(itStake);
+						}
+					}
 					vecStakeInfo.push_back(stStakeInfo);
+
 				}
 				else
 				{
@@ -88,15 +105,15 @@ bool CStakeInfo::Load()
 bool CStakeInfo::BuildIndex(const std::map<std::string, std::map<unsigned int, std::map<unsigned int, SWLink>>>& mapRoadOut,
 	std::vector<DCoord>& vecCoords)
 {
-	auto itWay = mapRoadOut.cbegin();
+	
 
 	unsigned int iLinkCount = 0;
 	unsigned int iCoordCount = 0;
 
-	for (itWay; itWay != mapRoadOut.cend(); ++itWay,iLinkCount)
+	for (auto itWay = mapRoadOut.cbegin(); itWay != mapRoadOut.cend(); ++itWay)
 	{	
 		auto itStakeWay = m_mapStakeIndex.find(itWay->first);
-		if (itStakeWay != m_mapStakeIndex.end()) //添加路线
+		if (itStakeWay == m_mapStakeIndex.end()) //添加路线
 		{
 			std::map<int, CLIndex> mapIndex;
 			std::map<int, std::map<int, CLIndex>> mapIndexDir;
@@ -116,76 +133,20 @@ bool CStakeInfo::BuildIndex(const std::map<std::string, std::map<unsigned int, s
 		}
 
 		//分开上下行处理里程桩的
+		/*void BuildCLIndex(std::map<int, std::map<int, CLIndex>>& mapIndexDir,
+			std::map<long long, std::vector<StakeInfo>>& mapStakeLink,
+			const std::map<unsigned int, std::map<unsigned int, SWLink>>& mapRoadDir,
+			std::vector<DCoord>& vecCoords, int iDir, unsigned int& iLinkCount, unsigned int& iCoordCount);*/
+#ifndef ONLY_STAKE_DATA
+
+		BuildCLIndex(itStakeWay->second, itStakeInfo->second, itWay->second, 
+			vecCoords, 1, iLinkCount, iCoordCount); //上行
+
+
+		BuildCLIndex(itStakeWay->second, itStakeInfo->second, itWay->second,
+			vecCoords, 2, iLinkCount, iCoordCount); //下行
+#else
 		auto itWayDir = itWay->second.find(1);
-		if (itWayDir != itWay->second.end())
-		{
-			auto itStakeDir = itStakeWay->second.find(1);
-			if (itStakeDir == itStakeWay->second.end())
-			{
-				std::map<int, CLIndex> mapIndex;
-				std::map<int, std::map<int, CLIndex>> mapIndexDir;
-				itStakeWay->second.insert(std::pair<int, std::map<int, CLIndex>>(1, mapIndex)); //上行
-			}
-
-			auto itWayLink = itWayDir->second.cbegin();
-			for (itWayLink; itWayLink != itWayDir->second.cend(); ++itWayLink,++iLinkCount)
-			{
-				const SWLink& stLink = itWayLink->second;
-				const long long lLinkID = itWayLink->first;
-				auto itStakeList = itStakeInfo->second.find(lLinkID);
-				if (itStakeList == itStakeInfo->second.end())
-				{
-					continue;
-				}
-				else
-				{
-					std::vector<StakeInfo>& vecStakeInfo = itStakeList->second;
-					auto itVecStake = vecStakeInfo.cbegin();
-					size_t iLinkCoordCount = 0;
-					for (itVecStake; itVecStake != vecStakeInfo.cend(); ++itVecStake)
-					{
-						unsigned int nPosPoint = -1;
-						if (IsShapePoint(itVecStake->dcoord, stLink.coords, nPosPoint))//正好是形状点
-						{
-							//放入到坐标容器中
-							vecCoords.insert(vecCoords.end(), stLink.coords.begin(), stLink.coords.end());
-
-							//建立里程桩的坐标索引
-							unsigned int iCIndex = nPosPoint + iLinkCount * iCoordCount;
-							CLIndex stIndex;
-							stIndex.CIndex = iCIndex;
-							stIndex.LIndex = iLinkCount;
-							itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
-
-							iLinkCoordCount = stLink.coords.size();
-						}
-						else //不是形状点
-						{
-							//将点插入到坐标容器中
-							std::vector<DCoord> vecNewCoords;
-							nPosPoint = InserteLinePoint(itVecStake->dcoord, stLink.coords, vecNewCoords);
-
-							//将新的坐标容器放入到总坐标容器中
-							vecCoords.insert(vecCoords.end(), vecNewCoords.begin(), vecNewCoords.end());
-
-							//建立里程桩的坐标索引
-							unsigned int iCIndex = nPosPoint + iLinkCount * iCoordCount;
-							CLIndex stIndex;
-							stIndex.CIndex = iCIndex;
-							stIndex.LIndex = iLinkCount;
-							itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
-
-							iLinkCoordCount = vecNewCoords.size();
-
-						}
-					}
-				}
-
-				iCoordCount += iLinkCount;
-			}
-		}
-
-		itWayDir = itWay->second.find(2);
 		if (itWayDir != itWay->second.end())
 		{
 			auto itStakeDir = itStakeWay->second.find(1);
@@ -196,11 +157,11 @@ bool CStakeInfo::BuildIndex(const std::map<std::string, std::map<unsigned int, s
 				itStakeWay->second.insert(std::pair<int, std::map<int, CLIndex>>(2, mapIndex)); //上行
 			}
 
-			auto itWayLink = itWayDir->second.cbegin();
-			for (itWayLink; itWayLink != itWayDir->second.cend(); ++itWayLink, ++iLinkCount)
+			
+			for (auto itWayLink = itWayDir->second.cbegin(); itWayLink != itWayDir->second.cend(); ++itWayLink, ++iLinkCount)
 			{
 				const SWLink& stLink = itWayLink->second;
-				const long long lLinkID = itWayLink->first;
+				const long long lLinkID = stLink.lLinkID;
 				auto itStakeList = itStakeInfo->second.find(lLinkID);
 				if (itStakeList == itStakeInfo->second.end())
 				{
@@ -209,50 +170,30 @@ bool CStakeInfo::BuildIndex(const std::map<std::string, std::map<unsigned int, s
 				else
 				{
 					std::vector<StakeInfo>& vecStakeInfo = itStakeList->second;
-					auto itVecStake = vecStakeInfo.cbegin();
 					size_t iLinkCoordCount = 0;
-					for (itVecStake; itVecStake != vecStakeInfo.cend(); ++itVecStake)
+					for (auto itVecStake = vecStakeInfo.cbegin(); itVecStake != vecStakeInfo.cend(); ++itVecStake)
 					{
-						unsigned int nPosPoint = -1;
-						if (IsShapePoint(itVecStake->dcoord, stLink.coords, nPosPoint))//正好是形状点
-						{
-							//放入到坐标容器中
-							vecCoords.insert(vecCoords.end(), stLink.coords.begin(), stLink.coords.end());
+						unsigned int nlPosPoint = -1;
 
-							//建立里程桩的坐标索引
-							unsigned int iCIndex = nPosPoint + iLinkCount * iCoordCount;
-							CLIndex stIndex;
-							stIndex.CIndex = iCIndex;
-							stIndex.LIndex = iLinkCount;
-							itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
+						//放入到坐标容器中
+						int nVecCount = vecCoords.size();
+						vecCoords.push_back(itVecStake->dcoord);
 
-							iLinkCoordCount = stLink.coords.size();
-						}
-						else //不是形状点
-						{
-							//将点插入到坐标容器中
-							std::vector<DCoord> vecNewCoords;
-							nPosPoint = InserteLinePoint(itVecStake->dcoord, stLink.coords, vecNewCoords);
+						//建立里程桩的坐标索引
+						unsigned int iCIndex = nVecCount;
+						CLIndex stIndex;
+						stIndex.CIndex = iCIndex;
+						stIndex.LIndex = iLinkCount;
+						itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
 
-							//将新的坐标容器放入到总坐标容器中
-							vecCoords.insert(vecCoords.end(), vecNewCoords.begin(), vecNewCoords.end());
-
-							//建立里程桩的坐标索引
-							unsigned int iCIndex = nPosPoint + iLinkCount * iCoordCount;
-							CLIndex stIndex;
-							stIndex.CIndex = iCIndex;
-							stIndex.LIndex = iLinkCount;
-							itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
-
-							iLinkCoordCount = vecNewCoords.size();
-
-						}
+						iLinkCoordCount = stLink.coords.size();
 					}
 				}
 
-				iCoordCount += iLinkCount;
+				iCoordCount = vecCoords.size();
 			}
 		}
+#endif // 
 
 	}
 	return true;
@@ -281,18 +222,17 @@ bool CStakeInfo::IsShapePoint(const DCoord& coord, const std::vector<DCoord>& ve
 unsigned int CStakeInfo::InserteLinePoint(const DCoord& coord, const std::vector<DCoord>& vecCoords, std::vector<DCoord>& newCoords)
 {
 	unsigned int nPos = 0;
-	auto itCoords = vecCoords.cbegin();
-	for (itCoords; itCoords != vecCoords.cend(); ++itCoords)
+	newCoords.assign(vecCoords.begin(), vecCoords.end());
+	for (auto itCoords = newCoords.cbegin(); (itCoords + 1) != newCoords.cend(); ++itCoords)
 	{
 		const DCoord& coordA = *itCoords;
 		const DCoord& coordB = *(itCoords + 1);
 		double dbLenA = CalculateLength(coord.Lon, coord.Lat, coordA.Lon, coordA.Lat);
 		double dbLenB = CalculateLength(coord.Lon, coord.Lat, coordB.Lon, coordB.Lat);
 		double dbLenAB = CalculateLength(coordA.Lon, coordA.Lat, coordB.Lon, coordB.Lat);
-		if (dbLenAB >= (dbLenA + dbLenB))
+		if (dbLenAB + 0.00005 >= (dbLenA + dbLenB))
 		{
 			++nPos;
-			newCoords.assign(vecCoords.begin(), vecCoords.end());
 			newCoords.insert(itCoords + 1, coord);
 			return nPos;
 		}
@@ -301,6 +241,123 @@ unsigned int CStakeInfo::InserteLinePoint(const DCoord& coord, const std::vector
 	}
 
 	return -1;
+}
+
+bool CStakeInfo::BuildIndex(std::map<std::string, std::map<unsigned int, std::map<unsigned int, SWLink>>>& mapRoadOut,
+	std::vector<DCoord>& vecCoords)
+{
+
+#ifdef ONLY_STAKE_DATA
+	if (mapRoadOut.size() > 0)
+	{
+		return false;
+	}
+	
+	if (vecCoords.size() > 0)
+	{
+		return false;
+	}
+
+	
+	for (auto itWayStake = m_mapStakeInfo.begin(); itWayStake != m_mapStakeInfo.end(); ++itWayStake)
+	{
+
+		std::map<double, SWLink, StakeIDLess> mapLinkNetUp;
+		std::map<double, SWLink, StakeIDMore> mapLinkNetDown;
+
+		
+		auto itWay = mapRoadOut.find(itWayStake->first);
+		if (itWay == mapRoadOut.end())
+		{
+			std::map<unsigned int, std::map<unsigned int, SWLink>> mapDir;
+			mapRoadOut.insert(make_pair(itWayStake->first, mapDir));
+			itWay = mapRoadOut.find(itWayStake->first);
+		}
+
+		for (auto itLinkStake = itWayStake->second.begin(); itLinkStake != itWayStake->second.end(); ++itLinkStake)
+		{
+
+			StakeInfo& stStakeInfo = itLinkStake->second.at(0);
+
+			SWLink stLink;
+			stLink.strRoadID = stStakeInfo.routeID;
+			stLink.lLinkID = stStakeInfo.lLinkID;
+			stLink.iDir = stStakeInfo.iDir;
+			stLink.dStartStake = stStakeInfo.stakeID;
+
+			//建立每条路线的link序列
+			const SWLink& link = stLink;
+			double dbStakeStart = link.dStartStake;
+			int iDir = link.iDir;
+
+			if (iDir == DIR_UP)
+			{
+				mapLinkNetUp.insert(std::pair<double, SWLink>(dbStakeStart, link));
+			}
+			else if (iDir == DIR_DOWN)
+			{
+				mapLinkNetDown.insert(std::pair<double, SWLink>(dbStakeStart, link));
+			}
+		}
+
+		//将上下行分成两组来处理
+		std::map<unsigned int, SWLink> mapTemp;
+		std::map<unsigned int, std::map<unsigned int, SWLink>>& mapRoadSig = itWay->second;
+		mapRoadSig.insert(std::pair<unsigned int, std::map<unsigned int, SWLink>>(1, mapTemp));
+		mapRoadSig.insert(std::pair<unsigned int, std::map<unsigned int, SWLink>>(2, mapTemp));
+
+		auto itRoadSig = mapRoadSig.find(1);
+		std::map<unsigned int, SWLink>& mapLinkOutUP = itRoadSig->second;
+		int i = 0;
+		auto itNetUp = mapLinkNetUp.cbegin();
+		for (itNetUp; itNetUp != mapLinkNetUp.cend(); ++itNetUp, ++i)
+		{
+			mapLinkOutUP.insert(std::pair<unsigned int, SWLink>(i, itNetUp->second));
+		}
+
+		itRoadSig = mapRoadSig.find(2);
+		std::map<unsigned int, SWLink>& mapLinkOutDown = itRoadSig->second;
+		auto itNetDown = mapLinkNetDown.cbegin();
+		for (itNetDown; itNetDown != mapLinkNetDown.cend(); ++itNetDown, ++i)
+		{
+			mapLinkOutDown.insert(std::pair<unsigned int, SWLink>(i, itNetDown->second));
+		}
+	}
+
+	return BuildIndex(const_cast<const std::map<std::string, std::map<unsigned int, std::map<unsigned int, SWLink>>>&>(mapRoadOut), vecCoords);
+#endif //
+
+	return true;
+}
+
+bool CStakeInfo::Build(const std::map<std::string, std::map<unsigned int, std::map<unsigned int, SWLink>>>& mapRoadOut,
+	std::vector<DCoord>& vecCoords)
+{
+	bool bRet = false;
+	bRet = Load();
+
+	if (!bRet)
+	{
+		printf("Load attrabute file failt!");
+		return bRet;
+	}
+
+#ifdef ONLY_STAKE_DATA
+	bRet = BuildIndex(const_cast<std::map<std::string, std::map<unsigned int, std::map<unsigned int, SWLink>>>&>(mapRoadOut), vecCoords);
+
+#else
+	bRet = BuildIndex(mapRoadOut, vecCoords);
+
+#endif // ONLY_STAKE_DATA
+
+
+	if (!bRet)
+	{
+		printf("Build Net file failt!");
+		return bRet;
+	}
+
+	return bRet;
 }
 
 bool CStakeInfo::OutToIndexFile(std::string strOutPath)
@@ -331,12 +388,12 @@ bool CStakeInfo::OutToIndexFile(std::string strOutPath)
 	}
 
 	SK::Index allIndex;
-	auto itStakeWay = m_mapStakeIndex.begin();
+	
 	int nWayCount = 0;
-	for (itStakeWay; itStakeWay != m_mapStakeIndex.end(); ++itStakeWay)
+	for (auto itStakeWay = m_mapStakeIndex.begin(); itStakeWay != m_mapStakeIndex.end(); ++itStakeWay)
 	{
-		auto itStakeDir = itStakeWay->second.begin();
-		for (itStakeDir; itStakeDir != itStakeWay->second.end(); ++itStakeDir)
+		
+		for (auto itStakeDir = itStakeWay->second.begin(); itStakeDir != itStakeWay->second.end(); ++itStakeDir)
 		{
 			SK::Index::mapIndex& mapIndex = *allIndex.add_mapindexs();
 			auto itStake = itStakeDir->second.begin();
@@ -365,4 +422,81 @@ bool CStakeInfo::OutToIndexFile(std::string strOutPath)
 	ofsFile.close();
 	ofsFile.clear();
 	return true;
+}
+
+void CStakeInfo::BuildCLIndex(std::map<int, std::map<int, CLIndex>>& mapIndexDir,
+	std::map<long long, std::vector<StakeInfo>>& mapStakeLink,
+	const std::map<unsigned int, std::map<unsigned int, SWLink>>& mapRoadDir,
+	std::vector<DCoord>& vecCoords, int iDir,
+	unsigned int& iLinkCount, unsigned int& iCoordCount)
+{
+	auto itWayDir = mapRoadDir.find(iDir);
+	if (itWayDir != mapRoadDir.end())
+	{
+		auto itStakeDir = mapIndexDir.find(iDir);
+		if (itStakeDir == mapIndexDir.end())
+		{
+			std::map<int, CLIndex> mapIndex;
+			std::map<int, std::map<int, CLIndex>> mapIndexDir;
+			mapIndexDir.insert(std::pair<int, std::map<int, CLIndex>>(iDir, mapIndex));
+		}
+		
+		for (auto itWayLink = itWayDir->second.cbegin(); itWayLink != itWayDir->second.cend(); ++itWayLink, ++iLinkCount)
+		{
+			const SWLink& stLink = itWayLink->second;
+			const long long lLinkID = stLink.lLinkID;
+			auto itStakeList = mapStakeLink.find(lLinkID);
+			if (itStakeList == mapStakeLink.end())
+			{
+				continue;
+			}
+			else
+			{
+				std::vector<StakeInfo>& vecStakeInfo = itStakeList->second;
+				auto itVecStake = vecStakeInfo.cbegin();
+				size_t iLinkCoordCount = 0;
+				for (itVecStake; itVecStake != vecStakeInfo.cend(); ++itVecStake)
+				{
+					unsigned int nPosPoint = -1;
+					if (IsShapePoint(itVecStake->dcoord, stLink.coords, nPosPoint))//正好是形状点
+					{
+						//放入到坐标容器中
+						int nVecCount = vecCoords.size();
+						vecCoords.insert(vecCoords.end(), stLink.coords.begin(), stLink.coords.end());
+
+						//建立里程桩的坐标索引
+						unsigned int iCIndex = nPosPoint + nVecCount;
+						CLIndex stIndex;
+						stIndex.CIndex = iCIndex;
+						stIndex.LIndex = iLinkCount;
+						itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
+
+						iLinkCoordCount = stLink.coords.size();
+					}
+					else //不是形状点
+					{
+						//将点插入到坐标容器中
+						std::vector<DCoord> vecNewCoords;
+						nPosPoint = InserteLinePoint(itVecStake->dcoord, stLink.coords, vecNewCoords);
+
+						//将新的坐标容器放入到总坐标容器中
+						int nVecCount = vecCoords.size();
+						vecCoords.insert(vecCoords.end(), vecNewCoords.begin(), vecNewCoords.end());
+
+						//建立里程桩的坐标索引
+						unsigned int iCIndex = nPosPoint + nVecCount;
+						CLIndex stIndex;
+						stIndex.CIndex = iCIndex;
+						stIndex.LIndex = iLinkCount;
+						itStakeDir->second.insert(std::pair<int, CLIndex>(itVecStake->stakeID, stIndex));
+
+						iLinkCoordCount = vecNewCoords.size();
+
+					}
+				}
+			}
+
+			iCoordCount += iLinkCount;
+		}
+	}
 }
